@@ -16,11 +16,11 @@ jobs:
           distribution: 'corretto'
           java-version: 17
 
-      - name: Cache local Mave Repository
+      - name: Cache local Maven Repository
         uses: actions/cache@v3
         with:
           path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashfile('**/pom.xml') }}
+          key: ${{ runner.os }}-maven-${{ hashFile('**/pom.xml') }}
           restore-keys: |
             ${{runner.os}}-maven-
 
