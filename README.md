@@ -73,6 +73,50 @@ jobs:
 
 ## 3. Cache Creation 
 
+       name: Spring boot kaiburr
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build-java-app:
+    name: Build and deploy kaiburr app
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Setup JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'corretto'
+          java-version: 17
+
+      - name: Cache local Maven Repository
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{runner.os}}-maven-
+
+      - name: Build App
+        run: |
+          mvn clean
+          mvn -B package --file pom.xml
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_USER_NAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS }}
+      - name: Build and Push
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          dockerfile: Dockerfile
+          push: true
+          tags: ${{secrets.DOCKER_HUB_USER_NAME }}/myapp:0.1.0
+
 ![3_cache_created](https://github.com/krishnasaw8340/Task-5-CI-CD-Pipeline-2023/assets/63328010/f7e8dba4-29ea-4246-a930-c6c990211612)
 
 
