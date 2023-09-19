@@ -16,7 +16,7 @@ jobs:
           distribution: 'corretto'
           java-version: 17
 
-      - name: Cache local Mave Repo
+      - name: Cache local Mave Repository
         uses: actions/cache@v3
         with:
           path: ~/.m2/repository
